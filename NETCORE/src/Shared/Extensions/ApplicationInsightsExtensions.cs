@@ -294,7 +294,12 @@
             where TService : class
             where TImplementation : class, TService
         {
-            if (!services.Any(o => o.ImplementationFactory == null && typeof(TImplementation).IsAssignableFrom(o.ImplementationType ?? o.ImplementationInstance.GetType())))
+            if (!services.Any(o =>
+#if NET8_0_OR_GREATER
+                o.IsKeyedService == false &&
+#endif
+                o.ImplementationFactory == null && 
+                typeof(TImplementation).IsAssignableFrom(o.ImplementationType ?? o.ImplementationInstance.GetType())))
             {
                 services.AddSingleton<TService, TImplementation>();
             }
