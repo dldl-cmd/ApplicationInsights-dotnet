@@ -14,7 +14,11 @@
     /// </summary>
     internal class DefaultApplicationInsightsServiceConfigureOptions : IConfigureOptions<ApplicationInsightsServiceOptions>
     {
+#if NET8_0_OR_GREATER
+        private readonly IWebHostEnvironment hostingEnvironment;
+#else
         private readonly IHostingEnvironment hostingEnvironment;
+#endif
         private readonly IConfiguration userConfiguration;
 
         /// <summary>
@@ -22,7 +26,13 @@
         /// </summary>
         /// <param name="hostingEnvironment"><see cref="IHostingEnvironment"/> to use for retreiving ContentRootPath.</param>
         /// <param name="configuration"><see cref="IConfiguration"/>  from an application.</param>
-        public DefaultApplicationInsightsServiceConfigureOptions(IHostingEnvironment hostingEnvironment, IConfiguration configuration = null)
+        public DefaultApplicationInsightsServiceConfigureOptions(
+#if NET8_0_OR_GREATER
+            IWebHostEnvironment hostingEnvironment,
+#else
+            IHostingEnvironment hostingEnvironment, 
+#endif
+            IConfiguration configuration = null)
         {
             this.hostingEnvironment = hostingEnvironment;
             this.userConfiguration = configuration;

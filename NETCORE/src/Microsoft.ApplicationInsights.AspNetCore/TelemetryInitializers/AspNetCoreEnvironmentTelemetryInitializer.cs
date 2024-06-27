@@ -12,13 +12,22 @@
     public class AspNetCoreEnvironmentTelemetryInitializer : ITelemetryInitializer
     {
         private const string AspNetCoreEnvironmentPropertyName = "AspNetCoreEnvironment";
+#if NET8_0_OR_GREATER
+        private readonly IWebHostEnvironment environment;
+#else
         private readonly IHostingEnvironment environment;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AspNetCoreEnvironmentTelemetryInitializer"/> class.
         /// </summary>
         /// <param name="environment">HostingEnvironment to provide EnvironmentName to be added to telemetry properties.</param>
-        public AspNetCoreEnvironmentTelemetryInitializer(IHostingEnvironment environment)
+        public AspNetCoreEnvironmentTelemetryInitializer(
+#if NET8_0_OR_GREATER
+            IWebHostEnvironment environment)
+#else
+            IHostingEnvironment environment)
+#endif
         {
             this.environment = environment;
         }

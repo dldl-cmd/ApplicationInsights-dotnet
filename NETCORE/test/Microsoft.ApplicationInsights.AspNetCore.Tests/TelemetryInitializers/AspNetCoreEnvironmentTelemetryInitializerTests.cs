@@ -17,7 +17,12 @@
         [Fact]
         public void InitializeDoesNotOverrideExistingProperty()
         {
-            var initializer = new AspNetCoreEnvironmentTelemetryInitializer(environment: EnvironmentHelper.GetIHostingEnvironment());
+            var initializer = new AspNetCoreEnvironmentTelemetryInitializer(
+#if NET8_0_OR_GREATER
+                environment: EnvironmentHelper.GetIWebHostEnvironment());
+#else
+                environment: EnvironmentHelper.GetIHostingEnvironment());
+#endif
             var telemetry = new RequestTelemetry();
             telemetry.Context.GlobalProperties.Add("AspNetCoreEnvironment", "Development");
             initializer.Initialize(telemetry);
@@ -29,7 +34,12 @@
         [Fact]
         public void InitializeSetsCurrentEnvironmentNameToProperty()
         {
-            var initializer = new AspNetCoreEnvironmentTelemetryInitializer(environment: EnvironmentHelper.GetIHostingEnvironment());
+            var initializer = new AspNetCoreEnvironmentTelemetryInitializer(
+#if NET8_0_OR_GREATER
+                environment: EnvironmentHelper.GetIWebHostEnvironment());
+#else
+                environment: EnvironmentHelper.GetIHostingEnvironment());
+#endif
             var telemetry = new RequestTelemetry();
             initializer.Initialize(telemetry);
 

@@ -1,7 +1,7 @@
 ﻿namespace Microsoft.ApplicationInsights.AspNetCore.Tests
 {
     using System.IO;
-
+    using Microsoft.AspNetCore.Hosting;
     using Moq;
 
     using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
@@ -27,5 +27,15 @@
             return mockEnvironment.Object;
         }
 #pragma warning restore CS0618 // Type or member is obsolete
+
+#if NET8_0_OR_GREATER
+        public static IWebHostEnvironment GetIWebHostEnvironment()
+        {
+            var mockEnvironment = new Mock<IWebHostEnvironment>();
+            mockEnvironment.Setup(x => x.EnvironmentName).Returns("UnitTest");
+            mockEnvironment.Setup(x => x.ContentRootPath).Returns(Directory.GetCurrentDirectory());
+            return mockEnvironment.Object;
+        }
+#endif
     }
 }
